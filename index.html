@@ -8,8 +8,22 @@
   </head>
   <body>
     <div class="header">
-      <h1>Speech Recognition</h1>
-      <p>Click the button and start speaking to see your words appear here in real-time...</p>
+      <div>
+        <h1>Speech Recognition</h1>
+        <button id="help-btn" title="See voice commands">?</button>
+      </div>
+      <p>
+        Click the button and start speaking to see your words appear here in
+        real-time...
+      </p>
+    </div>
+    <div id="help-dropdown">
+      <h3>Voice Commands</h3>
+      <ul>
+        <li><strong>"Stop"</strong> - Stop recording</li>
+        <li><strong>"Clear"</strong> - Clear all text</li>
+        <li><strong>"What is the time"</strong> - Get current time</li>
+      </ul>
     </div>
 
     <div class="controls">

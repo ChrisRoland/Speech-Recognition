@@ -7,6 +7,8 @@ recognition.lang = 'en-US';
 // button controls
 const toggleBtn = document.getElementById('toggle-btn');
 const statusSpan = document.getElementById('status');
+const helpBtn = document.getElementById('help-btn');
+const helpDropdown = document.getElementById('help-dropdown');
 
 let running = false; // whether user explicitly started recognition
 
@@ -45,6 +47,18 @@ toggleBtn.addEventListener('click', () => {
     if (running) stopRecognition(); else startRecognition();
 });
 
+// Help button toggle
+helpBtn.addEventListener('click', () => {
+    helpDropdown.classList.toggle('show');
+});
+
+// Close dropdown when clicking outside
+document.addEventListener('click', (e) => {
+    if (!helpBtn.contains(e.target) && !helpDropdown.contains(e.target)) {
+        helpDropdown.classList.remove('show');
+    }
+});
+
 let p = document.createElement('p');
 const words = document.querySelector('.words');
 words.appendChild(p);
@@ -58,26 +72,30 @@ recognition.addEventListener('result', e => {
 
     p.textContent = transcript;
 
+    // Only process commands when result is final
     if (e.results[0].isFinal) {
-        p = document.createElement('p');
-        words.appendChild(p);
-    }
+        const lowerTranscript = transcript.toLowerCase();
+        
+        if (lowerTranscript.includes("what is the time") || lowerTranscript.includes("what's the time")) {
+            const time = new Date().toLocaleTimeString();
+            const timePara = document.createElement('p');
+            timePara.textContent = `The current time is ${time}`;
+            words.appendChild(timePara);
+            p = document.createElement('p');
+            words.appendChild(p);
+        }
 
-    if (transcript.includes("What is the time")) {
-        const time = new Date().toLocaleTimeString();
-        const timePara = document.createElement('p');
-        timePara.textContent = `The current time is ${time}`;
-        words.appendChild(timePara);
-        p = document.createElement('p');
-        words.appendChild(p);
-    }
+        if (lowerTranscript.includes('stop')) {
+            stopRecognition();
+        }
 
-    if (transcript.includes('stop')) {
-        stopRecognition();
-    }
+        if (lowerTranscript.includes('clear')) {
+            words.innerHTML = '';
+            p = document.createElement('p');
+            words.appendChild(p);
+        }
 
-    if (transcript.includes('clear')) {
-        words.innerHTML = '';
+        // Create new paragraph for next transcript
         p = document.createElement('p');
         words.appendChild(p);
     }
